@@ -1,0 +1,11 @@
+{
+  "@metadatda": {
+    "authors": [
+      "Wolfgang Hochleitner"
+    ]
+  },
+  "externaldatabaseauth-general-error": "An error has occurred.",
+  "externaldatabaseauth-unsupported-algorithm": "The supplied hashing algorithm \"$1\" is not supported.",
+  "externaldatabaseauth-no-explicit-account-creation": "This provider cannot be used for explicit account creation.",
+  "externaldatabaseauth-no-user-testing": "Testing for existing users is not supported."
+}

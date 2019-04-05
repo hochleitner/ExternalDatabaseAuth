@@ -1,0 +1,67 @@
+{
+  "name": "ExternalDatabaseAuth",
+  "version": "0.1.0",
+  "author": "Wolfgang Hochleitner",
+  "url": "https://github.com/hochleitner/ExternalDatabaseAuth",
+  "description": "An extension to allow authentication against an external MySQL/MariaDB database",
+  "license-name": "GPL-2.0-or-later",
+  "type": "other",
+  "requires": {
+    "MediaWiki": ">= 1.29.0"
+  },
+  "AutoloadClasses": {
+    "ExternalDatabaseAuth\\ExternalDatabaseAuth": "includes/ExternalDatabaseAuth.php"
+  },
+  "AuthManagerAutoConfig": {
+    "primaryauth": {
+      "ExternalDatabaseAuth": {
+        "class": "ExternalDatabaseAuth\\ExternalDatabaseAuth",
+        "args": [
+          {
+            "authoritative": false
+          }
+        ],
+        "sort": 50
+      }
+    }
+  },
+  "MessagesDirs": {
+    "ExternalDatabaseAuth": [
+      "i18n"
+    ]
+  },
+  "config": {
+    "ExternalDatabaseAuthTest": {
+      "value": "test",
+      "description": "Some test value"
+    },
+    "ExternalDatabaseAuthDatabase": {
+      "value": {
+        "host": "localhost",
+        "user": false,
+        "password": false,
+        "database": false,
+        "tablePrefix": ""
+      },
+      "description": "Connection details for the external database, that stores the login information."
+    },
+    "ExternalDatabaseAuthFields": {
+      "value": {
+        "table": false,
+        "userLogin": false,
+        "userPassword": false,
+        "userEmail": false,
+        "userRealName": false
+      },
+      "description": "Information about the table and the field names that store the information about the users"
+    },
+    "ExternalDatabaseAuthHash": {
+      "value": "bcrypt",
+      "description": "Tells the extension the hashing algorithms that was used with your passwords. Accepts the following: bcrypt, argon2i, argon2id (which will use password_verify) or any string value supported by PHP's hash() function."
+    }
+  },
+  "ConfigRegistry": {
+    "ExternalDatabaseAuth": "GlobalVarConfig::newInstance"
+  },
+  "manifest_version": 2
+}
