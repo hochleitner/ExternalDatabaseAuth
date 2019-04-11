@@ -35,6 +35,16 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 	private $loginUser;
 
 	/**
+	 * Keeps record if this provider's login attempt was successful. This is necessary for the
+	 * postAuthentication() method since it is called for every registered provider and we need to
+	 * make sure that our post-auth tasks are only performed if our provider was the one that
+	 * successfully authenticated.
+	 *
+	 * @var boolean
+	 */
+	private $providerSuccess;
+
+	/**
 	 * Creates a new object for external database authentication. Queries the current configuration
 	 * and stores it for further use.
 	 *
@@ -48,6 +58,8 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 			MediaWikiServices::getInstance()
 				->getConfigFactory()
 				->makeConfig( "ExternalDatabaseAuth" );
+		$this->loginUser = null;
+		$this->providerSuccess = false;
 	}
 
 	/**
@@ -115,6 +127,7 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 		// Authenticate the user (see if password matches the stored one)
 		if ( $this->loginUser && $this->isPasswordValid( $req->password,
 				$this->loginUser->{$fields["userPassword"]} ) ) {
+			$this->providerSuccess = true;
 			return AuthenticationResponse::newPass( $req->username );
 		}
 
@@ -187,7 +200,7 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 	public function postAuthentication( $user, AuthenticationResponse $response ) {
 		parent::postAuthentication( $user, $response );
 
-		if ( $response->status === AuthenticationResponse::PASS ) {
+		if ( $response->status === AuthenticationResponse::PASS && $this->providerSuccess ) {
 			$fields = $this->edaConfig->get( "ExternalDatabaseAuthFields" );
 
 			$user->setRealName( $this->loginUser->{$fields["userRealName"]} );
