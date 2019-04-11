@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2019-04-12
+### Fixed
+
+- The tasks in postAuthentication() are now only performed if ExternalDatabaseAuth was the provider
+  that actually performed the successful login.
+
 ## [0.1.0] - 2019-04-06
 ### Added
 - Initial version inspired by [ExtAuthDB](https://www.mediawiki.org/wiki/Extension:ExtAuthDB).
@@ -18,5 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No absolute failure on wrong credentials which allows for other providers to run.
 - Adherence to MediaWiki's coding standards (testable via composer script).
 
-[Unreleased]: https://github.com/hochleitner/ExternalDatabaseAuth/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/hochleitner/ExternalDatabaseAuth/tags/v0.1.0
+[Unreleased]: https://github.com/hochleitner/ExternalDatabaseAuth/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/hochleitner/ExternalDatabaseAuth/releases/tag/v0.1.1
+[0.1.0]: https://github.com/hochleitner/ExternalDatabaseAuth/releases/tag/v0.1.0

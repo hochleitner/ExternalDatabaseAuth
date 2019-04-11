@@ -1,6 +1,6 @@
 {
   "name": "ExternalDatabaseAuth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Wolfgang Hochleitner",
   "url": "https://github.com/hochleitner/ExternalDatabaseAuth",
   "description": "An extension to allow authentication against an external MySQL/MariaDB database",
