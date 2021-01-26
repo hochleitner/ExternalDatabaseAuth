@@ -73,14 +73,17 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 	private function connectToDatabase() {
 		$databaseParameters = $this->edaConfig->get( "ExternalDatabaseAuthDatabase" );
 
-		return Database::factory( "mysql", [
-			"host" => $databaseParameters["host"],
-			"user" => $databaseParameters["user"],
-			"password" => $databaseParameters["password"],
-			"dbname" => $databaseParameters["database"],
-			"flags" => 0,
-			"tablePrefix" => $databaseParameters["tablePrefix"],
-		] );
+		return Database::factory(
+			"mysql",
+			[
+				"host" => $databaseParameters["host"],
+				"user" => $databaseParameters["user"],
+				"password" => $databaseParameters["password"],
+				"dbname" => $databaseParameters["database"],
+				"flags" => 0,
+				"tablePrefix" => $databaseParameters["tablePrefix"],
+			]
+		);
 	}
 
 	/**
@@ -118,17 +121,28 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 
 		// Get the field names necessary for the SQL query
 		$fields = $this->edaConfig->get( "ExternalDatabaseAuthFields" );
+		// Pull two fields in a variable so we can use them in the string-based WHERE clause below.
+		$loginField = $fields["userLogin"];
+		$emailField = $fields["userEmail"];
 
 		// Retrieve the whole record for the user that has been entered in the login form
+		// This can either be a login name or the email address to make it more flexible
 		$this->loginUser =
-			$database->selectRow( $fields["table"], [ "*" ],
-				[ $fields["userLogin"] => $req->username ], __METHOD__ );
+			$database->selectRow(
+				$fields["table"],
+				[ "*" ],
+				"( $loginField = '$req->username' ) OR ( $emailField = '$req->username' )",
+				__METHOD__
+			);
 
 		// Authenticate the user (see if password matches the stored one)
-		if ( $this->loginUser && $this->isPasswordValid( $req->password,
-				$this->loginUser->{$fields["userPassword"]} ) ) {
+		// Even if the email address was used, the username passed to the wiki database is the login name
+		if ( $this->loginUser && $this->isPasswordValid(
+				$req->password,
+				$this->loginUser->{$fields["userPassword"]}
+			) ) {
 			$this->providerSuccess = true;
-			return AuthenticationResponse::newPass( $req->username );
+			return AuthenticationResponse::newPass( $this->loginUser->{$loginField} );
 		}
 
 		// If authentication was not successful, return ABSTAIN so other providers can run
@@ -165,9 +179,11 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 
 		// If the supplied algorithm is not in our list, we'll throw an Exception
 		if ( !in_array( $algo, $availableAlgos ) ) {
-			throw new InvalidArgumentException( wfMessage( "externaldatabaseauth-unsupported-algorithm" )
-				->params( $algo )
-				->text() );
+			throw new InvalidArgumentException(
+				wfMessage( "externaldatabaseauth-unsupported-algorithm" )
+					->params( $algo )
+					->text()
+			);
 		}
 
 		switch ( $algo ) {
@@ -235,7 +251,8 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 	 * @return StatusValue Always StatusValue::newGood("ignored").
 	 */
 	public function providerAllowsAuthenticationDataChange(
-		AuthenticationRequest $req, $checkData = true
+		AuthenticationRequest $req,
+		$checkData = true
 	) {
 		return StatusValue::newGood( "ignored" );
 	}
@@ -271,6 +288,7 @@ class ExternalDatabaseAuth extends AbstractPasswordPrimaryAuthenticationProvider
 	 */
 	public function beginPrimaryAccountCreation( $user, $creator, array $reqs ) {
 		throw new BadMethodCallException(
-			wfMessage( "externaldatabaseauth-no-explicit-account-creation" )->text() );
+			wfMessage( "externaldatabaseauth-no-explicit-account-creation" )->text()
+		);
 	}
 }
