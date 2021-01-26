@@ -4,16 +4,9 @@ A MediaWiki extension to authenticate users from an external MySQL/MariaDB datab
 
 ## Use Case / Purpose
 
-This extension can be useful whenever you are running multiple web applications besides your MediaWiki and you are
-keeping all user/login data in one central MySQL or MariaDB database. To avoid having to synchronize the accounts with
-the MediaWiki database this extension simply connects to this external database, searches for the username that was
-entered in the wiki's login form and - if it was found - checks, if the supplied password matches the one that is stored
-alongside the username in the external database. If user and password match, a local user is created and authentication
-is successful. If the local user already exists (due to a previous login) it is simply updated. Since no password is
-stored in your wiki's database, authentication always relies on the external database.
+This extension can be useful whenever you are running multiple web applications besides your MediaWiki and you are keeping all user/login data in one central MySQL or MariaDB database. To avoid having to synchronize the accounts with the MediaWiki database this extension simply connects to this external database, searches for the username or email address that was entered in the wiki's login form and - if one of the two was found - checks, if the supplied password matches the one that is stored alongside the username or email address in the external database. If user and password match, a local user (the same as the username in the external database, not the email address) is created and authentication is successful. If the local user already exists (due to a previous login) it is simply updated. Since no password is stored in your wiki's database, authentication always relies on the external database.
 
-This extension was inspired by [ExtAuthDB](https://www.mediawiki.org/wiki/Extension:ExtAuthDB) and tries to offer the
-same functionality as a state of the art MediaWiki extension.
+This extension was inspired by [ExtAuthDB](https://www.mediawiki.org/wiki/Extension:ExtAuthDB) and tries to offer the same functionality as a state of the art MediaWiki extension.
 
 ## Requirements
 
@@ -48,7 +41,7 @@ $wgExternalDatabaseAuthFields = [
     'userRealName' => 'fieldwithrealname'
 ];
 $wgExternalDatabaseAuthHash = 'bcrypt';
-``` 
+```
 
 -  Navigate to `Special:Version` on your wiki to verify that the extension is successfully installed.
 
