@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2021-01-26
+### Added
+- A login can now be performed using a username or the email address. The user created in the wiki database still equals the username, even if the email address was used to login.
+
 ## [0.1.1] - 2019-04-12
 ### Fixed
 
@@ -24,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No absolute failure on wrong credentials which allows for other providers to run.
 - Adherence to MediaWiki's coding standards (testable via composer script).
 
-[Unreleased]: https://github.com/hochleitner/ExternalDatabaseAuth/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/hochleitner/ExternalDatabaseAuth/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/hochleitner/ExternalDatabaseAuth/releases/tag/v0.2.0
 [0.1.1]: https://github.com/hochleitner/ExternalDatabaseAuth/releases/tag/v0.1.1
 [0.1.0]: https://github.com/hochleitner/ExternalDatabaseAuth/releases/tag/v0.1.0
